@@ -1,11 +1,10 @@
 Acceptance Tests: Why, What and How?
 
 Minhaj Uddin Khan
-The Source Team 
+The Source Team
 
 * Agenda
 
-For what purpose is this enormous gathering
 
 - Why Acceptance Tests?
 - What are they even?
@@ -16,7 +15,7 @@ For what purpose is this enormous gathering
 
 * 1.1. Why aren't unit tests enough
 
-Even though the units are fully tested, one cannot say that those 
+Even though the units are fully tested, one cannot say that those
 tested units will work together as expected.
 
 
@@ -48,9 +47,11 @@ you run the cronjob locally.
 - Predictable external environment
 
 
+
+
 * 2.1. Anatomy of an Acceptance Test
 
-.image dave_farley.png 
+.image dave_farley.png
 .caption https://continuous-delivery.co.uk/downloads/ATDD%20Guide%2026-03-21.pdf
 
 * 2.1. Test Specification
@@ -61,8 +62,8 @@ Test Specification is a document that describes the expected behavior of the sys
 .code testing_spec.go /START OMIT/,/END OMIT/
 * 2.2. DSL
 
-The DSL is shared between test-cases. It is designed to make it easy to write Test Cases. It should allow
-precision, where precision is need to express a test and skim over detail where it is not. 
+It is designed to make it easy to write Test Cases. It should allow
+precision, where precision is needed to express a test and skim over detail where it is not.
 
 .code dsl_usage.go
 
@@ -75,7 +76,6 @@ Protocol Driver is a piece of code that simulates the external user, sending req
 
 * 2.4. Stub Infrastructure
 
-- Database Migrations 
 - Seed Data _(e.g,_ _authors_,_content_providers_etc)_
 - Mocked External Dependencies _(Funtik_,_EventBus,_etc.)_
 
@@ -90,7 +90,7 @@ This is the application you are testing.
 
 _NOTE:_all_of_these_talk_to_the_stub_external_dependencies_
 
-* 3. The How 
+* 3. The How
 
 * 3.1. How do we run these tests?
 

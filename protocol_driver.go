@@ -1,16 +1,18 @@
-func (d *ProtocolDriver) CreateArticle(ctx context.Context, language language.Code, integrationID int) ids.ID {
+func (d *ProtocolDriver) PublishArticle(ctx context.Context, articleID ids.ID, body ArticlePublishRequest, token string) {
 	t := d.T
 
-	e := createArticleRequest{Language: language}
-	url := fmt.Sprintf("%s/v1/articles", d.networkAPIURL)
-	b := io.NopCloser(bytes.NewReader(mustMarshal(e)))
-	req, _ := http.NewRequestWithContext(ctx, http.MethodPost, url, b)
+	req, err := http.NewRequestWithContext(ctx, http.MethodPut, fmt.Sprintf("%s/v1/articles/%s", d.networkAPIURL, articleID.String()), io.NopCloser(bytes.NewReader(mustMarshal(body))))
+	require.NoError(t, err)
 
-	resp, _ := http.DefaultClient.Do(req)
+	req.Header.Set("Authorization", fmt.Sprintf("Bearer %s", token))
+	req.Header.Set("Content-Type", "application/json")
+	resp, err := http.DefaultClient.Do(req)
 
-	defer resp.Body.Close()
-	var response createArticleResponse
-	_ = json.NewDecoder(resp.Body).Decode(&response)
+	defer func() {
+		_, _ = io.Copy(io.Discard, resp.Body)
+		resp.Body.Close()
+	}()
 
-	return response.ID
+	require.NoError(t, err, "failed to publish article")
+	require.Equal(t, http.StatusOK, resp.StatusCode, "unexpected status code for publish article")
 }

@@ -1,19 +1,17 @@
-func SutWithEditedArticle(articleID ids.ID, opts ...articleOption) func(s *SystemUnderTest) {
-	return func(s *SystemUnderTest) {
-		article := article{
-			articleID: articleID,
-			title:     defaultEnglishArticleTitle,
-			// .. other defaults
-		}
-
-		for _, opt := range opts {
-			opt(&article)
-		}
-
-		s.dbProtocolDriver.CreateArticle(article)
-		s.dbProtocolDriver.CreateArticleRevision(articleRevision{
-			articleID: article.articleID,
-			// .. other defaults
-		})
+func (s *SystemUnderTest) PublishArticle(ctx context.Context, opts ...articleOption) {
+	// driver
+	articlePublication := article{
+		articleID:    ids.GenerateArticleID(),
+		language:     defaultLanguage,
+		title:        defaultEnglishArticleTitle,
+		content:      defaultEnglishArticleBlockContent,
+		imageURL:     defaultImageURL,
+		authorID:     defaultAuthorAuth0ID,
+		authorHidden: defaultAuthorHidden,
 	}
+	for _, opt := range opts {
+		opt(&articlePublication)
+	}
+	req := buildRequest(articlePublication)
+	s.protocolDriver.PublishArticle(ctx, articlePublication.articleID, req)
 }
